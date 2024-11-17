@@ -1,0 +1,7 @@
+Flask
+flask-cors
+openai
+requests
+ffmpeg-python 
+soundfile
+imageio[ffmpeg]
