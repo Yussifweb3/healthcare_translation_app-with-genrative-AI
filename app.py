@@ -12,7 +12,7 @@ app = Flask(__name__, template_folder="templates", static_folder="static")
 CORS(app)
 
 # OpenAI API Key
-openai.api_key = "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"
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 # In-memory cache for term definitions
