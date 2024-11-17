@@ -1,6 +1,6 @@
 Flask
 flask-cors
-openai
+openai==0.28.0
 requests
 ffmpeg-python 
 soundfile
