@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Translation Web App</title>
+    <!-- Link to CSS -->
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Healthcare Translation Web App</h1>
+
+        <!-- Audio Recording Section -->
+        <div>
+            <button id="startRecording">Start Recording</button>
+            <button id="stopRecording">Stop Recording</button>
+        </div>
+
+        <!-- Input Textarea -->
+        <textarea id="inputText" placeholder="Enter text to translate..."></textarea>
+
+        <!-- Language Selection -->
+        <div>
+            <label for="sourceLang">From:</label>
+            <select id="sourceLang">
+                <option value="English">English</option>
+                <option value="Spanish">Spanish</option>
+                <option value="French">French</option>
+                <!-- Add more languages as needed -->
+            </select>
+
+            <label for="targetLang">To:</label>
+            <select id="targetLang">
+                <option value="Spanish">Spanish</option>
+                <option value="English">English</option>
+                <option value="French">French</option>
+                <!-- Add more languages as needed -->
+            </select>
+        </div>
+
+        <!-- Translate Button -->
+        <button id="translateButton">Translate</button>
+
+        <!-- Output Translation -->
+        <h3>Translation:</h3>
+        <div id="outputText" class="translated-text"></div>
+    </div>
+
+    <!-- Link to JavaScript -->
+    <script src="/static/script.js"></script>
+</body>
+</html>
