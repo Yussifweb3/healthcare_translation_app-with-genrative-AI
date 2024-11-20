@@ -18,6 +18,15 @@ body {
     text-align: center;
 }
 
+.definitions-area {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
 /* Header Styling */
 h1 {
     font-size: 24px;
