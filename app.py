@@ -6,6 +6,9 @@ import base64
 import tempfile
 import ffmpeg
 import imageio_ffmpeg as imageio_ffmpeg
+import threading
+import time
+import requests
 
 # Initialize Flask app
 app = Flask(__name__, template_folder="templates", static_folder="static")
@@ -183,8 +186,21 @@ def define_terms():
 
     return jsonify({"definitions": results})
 
+def self_ping():
+    """Function to keep the app awake by pinging itself."""
+    while True:
+        try:
+            url = "https://healthcare-translation-app.onrender.com/"
+            response = requests.get(url)
+            print(f"Self-ping status: {response.status_code}")
+        except Exception as e:
+            print(f"Error in self-ping: {e}")
+        time.sleep(600)
 
 # Main entry point
 if __name__ == "__main__":
+    # Start the self-pinging thread
+    threading.Thread(target=self_ping, daemon=True).start()
+    
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
