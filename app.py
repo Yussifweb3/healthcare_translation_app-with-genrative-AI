@@ -14,11 +14,20 @@ import requests
 app = Flask(__name__, template_folder="templates", static_folder="static")
 CORS(app)
 
-# Load OpenAI API Key
+# Load OpenAI API Key (for transcription only)
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Cache for storing medical term definitions
 cache = {}
+
+# Language mapping for MyMemory API
+LANGUAGE_MAP = {
+    "English": "en",
+    "Spanish": "es",
+    "French": "fr",
+    "German": "de",
+    # Add more languages as needed
+}
 
 # Helper function: Convert audio to 16-bit PCM WAV
 def process_audio(input_audio_path, output_audio_path):
@@ -79,33 +88,41 @@ def transcribe_audio():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Route: Translate text
+# Route: Translate text using MyMemory API
 @app.route("/translate", methods=["POST"])
 def translate_text():
     data = request.json
     text = data.get("text", "")
-    source_lang = data.get("source_lang", "English")
-    target_lang = data.get("target_lang", "Spanish")
+    source_lang = LANGUAGE_MAP.get(data.get("source_lang", "English"), "en")
+    target_lang = LANGUAGE_MAP.get(data.get("target_lang", "Spanish"), "es")
 
     if not text:
         return jsonify({"error": "No text provided"}), 400
 
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a helpful translator."},
-                {"role": "user", "content": f"Translate the following text from {source_lang} to {target_lang}: {text}"}
-            ],
-            max_tokens=500
-        )
-        translated_text = response["choices"][0]["message"]["content"].strip()
+        # MyMemory Translation API endpoint
+        url = "https://api.mymemory.translated.net/get"
+        params = {
+            "q": text,
+            "langpair": f"{source_lang}|{target_lang}"  # Source and target languages
+        }
+
+        # Send request to MyMemory API
+        response = requests.get(url, params=params)
+        response_data = response.json()
+
+        # Check if translation was successful
+        if response_data.get("responseStatus") != 200:
+            return jsonify({"error": "Translation failed. Please try again."}), 500
+
+        # Extract translated text
+        translated_text = response_data["responseData"]["translatedText"]
         return jsonify({"translation": translated_text})
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# Route: Define medical terms
+# Route: Define medical terms using OpenAI
 @app.route("/define", methods=["POST"])
 def define_terms():
     data = request.json
@@ -186,6 +203,7 @@ def define_terms():
 
     return jsonify({"definitions": results})
 
+# Self-ping function to keep the app awake
 def self_ping():
     """Function to keep the app awake by pinging itself."""
     while True:
