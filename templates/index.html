@@ -12,16 +12,21 @@
         <h1>Healthcare Translation Web App</h1>
 
         <!-- Audio Recording Section -->
-        <div>
+        <div class="recording-section">
             <button id="startRecording">Start Recording</button>
-            <button id="stopRecording">Stop Recording</button>
+            <button id="stopRecording" disabled>Stop Recording</button>
         </div>
 
+        <!-- Audio Playback -->
+        <audio id="audioPlayer" controls style="margin-top: 20px; display: none;">
+            Your browser does not support the audio element.
+        </audio>
+
         <!-- Input Textarea -->
-        <textarea id="inputText" placeholder="Enter text to translate..."></textarea>
+        <textarea id="inputText" placeholder="Enter text or record audio..."></textarea>
 
         <!-- Language Selection -->
-        <div>
+        <div class="language-selection">
             <label for="sourceLang">From:</label>
             <select id="sourceLang">
                 <option value="English">English</option>
@@ -45,6 +50,9 @@
         <!-- Output Translation -->
         <h3>Translation:</h3>
         <div id="outputText" class="translated-text"></div>
+
+        <!-- Medical Term Definitions -->
+        <h3>Medical Term Definitions:</h3>
         <div id="definitionArea" class="definitions-area"></div>
     </div>
 
