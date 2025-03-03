@@ -5,3 +5,4 @@ requests
 ffmpeg-python 
 soundfile
 imageio[ffmpeg]
+python-multipart
