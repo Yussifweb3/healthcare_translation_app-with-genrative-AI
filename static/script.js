@@ -71,6 +71,8 @@ document.getElementById("translateButton").addEventListener("click", async () =>
         const data = await response.json();
         if (data.translation) {
             document.getElementById("outputText").innerHTML = data.translation;
+            // Show the "Speak" button
+            document.getElementById("speakButton").style.display = "block";
         } else {
             console.error("Error during translation:", data.error);
             alert("Translation failed. Please try again.");
@@ -151,4 +153,16 @@ document.getElementById("stopRecording").addEventListener("click", async () => {
         };
         reader.readAsDataURL(audioBlob);
     };
+});
+
+// Speak the translated text
+document.getElementById("speakButton").addEventListener("click", () => {
+    const translatedText = document.getElementById("outputText").innerText;
+    if (translatedText) {
+        const utterance = new SpeechSynthesisUtterance(translatedText);
+        utterance.lang = document.getElementById("targetLang").value; // Set the language
+        speechSynthesis.speak(utterance);
+    } else {
+        alert("No translated text to speak!");
+    }
 });
