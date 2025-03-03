@@ -22,7 +22,6 @@ async function fetchDefinitions(words, sourceLang, targetLang) {
     }
 }
 
-// Display medical term definitions below the translation
 // Display medical term definitions
 function displayDefinitions(definitions) {
     const definitionArea = document.getElementById("definitionArea");
@@ -36,7 +35,6 @@ function displayDefinitions(definitions) {
         definitionArea.appendChild(defElement);
     }
 }
-
 
 // Translate text and display definitions
 document.getElementById("translateButton").addEventListener("click", async () => {
@@ -96,23 +94,39 @@ document.getElementById("startRecording").addEventListener("click", async () => 
 
         mediaRecorder.start();
         alert("Recording started...");
+
+        // Enable the "Stop Recording" button
+        document.getElementById("stopRecording").disabled = false;
+        document.getElementById("startRecording").disabled = true;
     } catch (error) {
         console.error("Error accessing microphone:", error);
         alert("Unable to access microphone. Please check your permissions.");
     }
 });
 
-// Stop audio recording
+// Stop audio recording and play back the recorded audio
 document.getElementById("stopRecording").addEventListener("click", async () => {
     if (mediaRecorder && mediaRecorder.state === "recording") {
         mediaRecorder.stop();
         alert("Recording stopped!");
+
+        // Disable the "Stop Recording" button
+        document.getElementById("stopRecording").disabled = true;
+        document.getElementById("startRecording").disabled = false;
     } else {
         alert("No active recording to stop!");
     }
 
     mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+
+        // Play back the recorded audio
+        const audioPlayer = document.getElementById("audioPlayer");
+        audioPlayer.src = URL.createObjectURL(audioBlob);
+        audioPlayer.style.display = "block";
+        audioPlayer.play();
+
+        // Convert the audio to base64 for transcription
         const reader = new FileReader();
         reader.onload = async () => {
             const base64Audio = reader.result.split(",")[1];
